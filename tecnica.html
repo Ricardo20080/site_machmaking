@@ -98,9 +98,7 @@
       <h2>6.4 — Match Quality Score (MQS) e Janelas de MMR</h2>
       <p>O MQS é um número que indica “quão boa” é essa partida potencial. Ele mistura fatores como diferença de habilidade, latência média, tamanho de parties, risco de smurf, e tempo de fila (bônus para quem espera muito).</p>
       <p>Fórmula didática (exemplo):</p>
-      <pre>
-MQS = 0.5 * habilidade_score + 0.3 * ping_score - 0.15 * party_penalty - 0.05 * smurfRisk + 0.1 * tempoFilaBonus
-      </pre>
+       <img class="placeholder" src="assets/formula.png" alt="formula">
       <p>Janelas de MMR (estratégia típica):</p>
       <ul>
         <li>Janela inicial: ±25</li>
