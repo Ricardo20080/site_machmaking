@@ -1,6 +1,6 @@
 /* ------------------------------------------------ */
 /* tecnica.css — stacked large cards per section    */
-/* Organização completa, sem alterar nenhum valor   */
+/* Organização completa, com suporte ao novo logo   */
 /* ------------------------------------------------ */
 
 /* --------------------------- */
@@ -51,6 +51,7 @@ html, body{
   background:rgba(7,12,22,0.84);
   backdrop-filter:blur(6px);
   border-bottom:1px solid rgba(255,255,255,0.03);
+  z-index:999;
 }
 
 .nav-wrapper{
@@ -58,15 +59,40 @@ html, body{
   align-items:center;
   justify-content:space-between;
   padding:14px 20px;
+  max-width:980px;
+  margin:0 auto;
 }
 
-.logo{
+/* --------------------------- */
+/*            LOGO            */
+/* --------------------------- */
+
+.logo-wrapper{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-img{
+  width:38px;
+  height:38px;
+  object-fit:contain;
+  user-select:none;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,0.4));
+}
+
+.logo-text{
   font-weight:800;
+  font-size:18px;
   background:linear-gradient(135deg,var(--accent1),var(--accent2));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  line-height:1;
 }
 
+/* --------------------------- */
+/*        NAV-LINKS           */
+/* --------------------------- */
 .nav-links{
   display:flex;
   gap:10px;
@@ -150,7 +176,7 @@ html, body{
   overflow:auto;
 }
 
-/* placeholder para imagens */
+/* placeholder */
 .placeholder{
   width:100%;
   height:320px;
@@ -187,7 +213,26 @@ html, body{
 /*          RESPONSIVO        */
 /* --------------------------- */
 @media(max-width:720px){
+
   .container{
     padding:18px;
+  }
+
+  .nav-wrapper{
+    padding:12px 14px;
+  }
+
+  /* logo resp */
+  .logo-img{
+    width:30px;
+    height:30px;
+  }
+
+  .logo-text{
+    font-size:16px;
+  }
+
+  .card{
+    padding:20px;
   }
 }

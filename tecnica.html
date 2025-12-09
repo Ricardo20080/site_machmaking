@@ -8,8 +8,11 @@
 </head>
 <body>
 <header class="header">
-  <div class="nav-wrapper container">
-    <div class="logo">Matchmaking — Dossiê Clash Royale</div>
+   <div class="nav-wrapper container">
+    <div class="logo-wrapper">
+  <img src="assets/logo.png" alt="Logo do Projeto" class="logo-img">
+  <span class="logo-text">Matchmaking — Dossiê Clash Royale</span>
+</div>
     <nav class="nav-links">
       <a class="nav-link" href="index.html">Home</a>
       <a class="nav-link active" href="tecnica.html">Técnica</a>
@@ -49,48 +52,53 @@
   <!-- Card: Pipeline -->
   <section class="section">
     <article class="card">
-      <h2>6.2 — Pipeline completo do matchmaking (passo a passo)</h2>
-      <p>Descrição sequencial do que acontece no sistema:</p>
-      <ol>
-        <li><strong>Entrada do Ticket:</strong> o cliente envia PlayerID, modo, ping, party_id, mmr_snapshot e time_created.</li>
-        <li><strong>Validação rápida:</strong> checagens de penalidade/ping/modo.</li>
-        <li><strong>Inserção em fila:</strong> ticket cai em bucket por região e modo.</li>
-        <li><strong>Busca inicial (janela MMR pequena):</strong> ex.: ±25 em torno do MMR.</li>
-        <li><strong>Se não encontrar:</strong> amplia a janela (±50, ±100) após alguns segundos.</li>
-        <li><strong>Formação de grupos compatíveis:</strong> respeita parties, roles e limites do modo.</li>
-        <li><strong>Geração de combinações e cálculo do MQS:</strong> cada combinação recebe um score.</li>
-        <li><strong>Seleção da melhor combinação:</strong> que atenda requisitos de ping e MQS mínimo.</li>
-        <li><strong>Alocação do servidor:</strong> servidor próximo e com capacidade.</li>
-        <li><strong>Confirmação com jogadores:</strong> se algum recusa/disconecta, tickets retornam à fila.</li>
-        <li><strong>Início da partida</strong>.</li>
-        <li><strong>Pós-jogo:</strong> atualizar MMR, logs, executar detecções (smurf/afk), armazenar estatísticas.</li>
-      </ol>
+      <h2>Regras que guiam o fluxograma</h2>
+      <p> Outras regras nao mostradas no fluxograma:</p>
+      <ul>
+        <li><strong>1.</strong>  Prioridade para quem espera há mais tempo.</li>
+        <li><strong>2.</strong>  Combinaçoes precisam atingir um MQS minimo.</li>
+        <li><strong>3.</strong>  A janela de MMR aumenta de forma progressiva.</li>
+        <li><strong>4</strong>  Partidas só são criadas se todos aceitarem..</li>
+        <li><strong>5.</strong>  O sistema sempre tenta usar o servidor com menor ping médio.</li>
+      </ul>
+
+      <h3> Situaçoes especiais do processo:</h3>
+       <ul>
+        <li><strong>Fila longa:</strong> o sistema continua expandindo a janela até encontrar jogadores.</li>
+        <li><strong>Party desbalanceada:</strong> apply regras de compensação no MQS.</li>
+        <li><strong>Ping alto:</strong> tenta outro servidor antes de criar a partida.</li>
+        <li><strong>Recusa de um jogador:</strong> retorna somente os tickets afetados.</li>
+
+       </ul>
+    
     </article>
   </section>
 
-  <!-- Card: Algoritmo -->
-  <section class="section">
-    <article class="card">
-      <h2>6.3 — Algoritmo de formação de times (pseudocódigo)</h2>
-      <pre>
-1. pegar tickets na fila (bucket de mesma região e modo)
-2. ordenar tickets por tempo de espera (quem está há mais tempo tem prioridade)
-3. para cada ticket 'A' na lista:
-     procurar candidatos B, C, ... dentro da janela atual de MMR
-     formar combinações possíveis (ex.: pares para 1v1, quartetos para 2v2)
-     calcular MQS para cada combinação
-     se alguma combinação tiver MQS >= threshold:
-         reservar os tickets (remover da fila)
-         notificar jogadores ("Match found")
-         alocar servidor e criar a partida
-         sair do loop para não usar esses tickets novamente
-4. se não encontrar combinação:
-     esperar X segundos e aumentar a janela de MMR
-     repetir processo
-      </pre>
-      <p>Explicação: o sistema prioriza quem está esperando há mais tempo (para evitar starvation). Caso não ache parceiros similares, aumenta a tolerância para reduzir o tempo de fila.</p>
-    </article>
-  </section>
+ <!-- Card: 6.3 — Estabilidade da conexão e regras de entrada -->
+<section class="section">
+  <article class="card">
+    <h2>6.3 — Estabilidade da conexão e regras de entrada</h2>
+    <p>Antes de confirmar uma partida, o sistema checa a qualidade da conexão dos jogadores para reduzir quedas, lag e partidas inseguras.</p>
+
+    <ol>
+      <li><strong>Ping atual e variação:</strong> monitora latência e oscilações nos últimos segundos.</li>
+      <li><strong>Perda de pacotes:</strong> verifica taxa de packet loss para evitar jogadores com conexões instáveis.</li>
+      <li><strong>Tipo de conexão:</strong> identifica Wi-Fi instável vs. rede móvel e aplica regras diferenciadas.</li>
+      <li><strong>Histórico recente:</strong> avalia quedas/abandono recentes para estimar risco de desconexão.</li>
+      <li><strong>Risco de desconexão:</strong> combina métricas acima em um score que indica se o jogador é seguro para a partida.</li>
+      <li><strong>Ações automáticas:</strong>
+        <ul>
+          <li>adiar o match por alguns segundos para estabilização;</li>
+          <li>recolocar o jogador em uma fila mais tolerante;</li>
+          <li>excluir o jogador da combinação atual se o risco for alto.</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p><em>Objetivo:</em> formar partidas somente quando todos os jogadores tiverem conexão mínima aceitável, reduzindo rematches e frustração.</p>
+  </article>
+</section>
+
 
   <!-- Card: MQS & Janelas -->
   <section class="section">
@@ -143,33 +151,170 @@
       </ul>
     </article>
   </section>
+<!-- Card: DER Conceitual Atualizado -->
+<section class="section">
+  <article class="card">
 
-  <!-- Card: DER conceitual -->
-  <section class="section">
-    <article class="card">
-      <h2>14 — MODELO DE DADOS (DER Conceitual)</h2>
-      <p>Entidades principais para modelagem de dados:</p>
-      <ul>
-        <li><strong>Player</strong> — id, nickname, região, plataforma, status.</li>
-        <li><strong>Player_MMR</strong> — histórico por modo (player_id, mode, mmr_value, mmr_sigma).</li>
-        <li><strong>Queue_Ticket</strong> — ticket_id, player_id, party_id, mode, mmr_snapshot, time_created, status.</li>
-        <li><strong>Party</strong> — party_id, owner_id, size.</li>
-        <li><strong>Party_Members</strong> — relacionamento Party ↔ Player.</li>
-        <li><strong>Match</strong> — match_id, mode, start_time, server_id, match_quality_score.</li>
-        <li><strong>Match_Players</strong> — associação Match ↔ Player com time, resultado e estatísticas.</li>
-      </ul>
-      <p>Relacionamentos principais:</p>
-      <ul>
-        <li>Player 1 — N Player_MMR</li>
-        <li>Player 1 — N Queue_Ticket</li>
-        <li>Party N — N Player (via Party_Members)</li>
-        <li>Match N — N Player (via Match_Players)</li>
-        <li>Party 1 — N Queue_Ticket</li>
-      </ul>
-      <p>[IMAGEM: DER conceitual aqui]</p>
-      <img class="placeholder" src="assets/der.png" alt="DER conceitual">
-    </article>
-  </section>
+    <h2>14 — MODELO DE DADOS (DER Conceitual)</h2>
+
+    <p>A seguir está o modelo conceitual REAL do sistema de matchmaking, composto por 9 entidades, seus atributos conceituais, descrições e os relacionamentos com cardinalidades mín./máx.</p>
+
+
+    <!-- ENTIDADES -->
+    <h3>🌐 ENTIDADES (E01–E09)</h3>
+
+    <h3>🔵 E01 — PLAYER</h3>
+    <p><strong>Descrição:</strong> representa cada jogador existente no sistema, com informações básicas e identificadoras.</p>
+    <ul>
+      <li>player_id</li>
+      <li>nickname</li>
+      <li>tag</li>
+      <li>região</li>
+      <li>plataforma</li>
+      <li>nível_conta</li>
+      <li>status</li>
+    </ul>
+
+    <h3>🔵 E02 — PLAYER_MMR</h3>
+    <p><strong>Descrição:</strong> registra o MMR do jogador por modo e sua incerteza (sigma).</p>
+    <ul>
+      <li>mmr_id</li>
+      <li>mmr_atual</li>
+      <li>mmr_sigma</li>
+      <li>mmr_peak</li>
+      <li>mmr_min</li>
+      <li>última_atualização</li>
+    </ul>
+
+    <h3>🔵 E03 — PARTY</h3>
+    <p><strong>Descrição:</strong> grupo temporário de jogadores que entram juntos na fila.</p>
+    <ul>
+      <li>party_id</li>
+      <li>tamanho</li>
+      <li>criacao</li>
+      <li>mmr_medio</li>
+      <li>latência_media</li>
+    </ul>
+
+    <h3>🔵 E04 — PARTY_MEMBERS</h3>
+    <p><strong>Descrição:</strong> associação que representa membros pertencentes a uma Party.</p>
+    <ul>
+      <li>id_relacao</li>
+      <li>função_na_party</li>
+    </ul>
+
+    <h3>🔵 E05 — MODE_CONFIG</h3>
+    <p><strong>Descrição:</strong> definições e regras de cada modo (1v1, 2v2, desafios).</p>
+    <ul>
+      <li>mode_id</li>
+      <li>nome</li>
+      <li>team_size</li>
+      <li>janela_mmr_inicial</li>
+      <li>janela_mmr_maxima</li>
+      <li>tempo_max_fila</li>
+    </ul>
+
+    <h3>🔵 E06 — QUEUE_TICKET</h3>
+    <p><strong>Descrição:</strong> unidade fundamental de entrada na fila do matchmaking.</p>
+    <ul>
+      <li>ticket_id</li>
+      <li>snapshot_mmr</li>
+      <li>snapshot_latency</li>
+      <li>smurf_risk</li>
+      <li>connection_risk</li>
+      <li>horario_entrada</li>
+      <li>status</li>
+    </ul>
+
+    <h3>🔵 E07 — MATCH</h3>
+    <p><strong>Descrição:</strong> partida criada pelo matchmaking.</p>
+    <ul>
+      <li>match_id</li>
+      <li>hora_inicio</li>
+      <li>qualidade_partida (MQS)</li>
+      <li>duração</li>
+      <li>região_servidor</li>
+    </ul>
+
+    <h3>🔵 E08 — SERVER</h3>
+    <p><strong>Descrição:</strong> servidores e disponibilidade por região onde a partida é hospedada.</p>
+    <ul>
+      <li>server_id</li>
+      <li>região</li>
+      <li>capacidade</li>
+      <li>ping_médio</li>
+    </ul>
+
+    <h3>🔵 E09 — MATCH_PLAYERS</h3>
+    <p><strong>Descrição:</strong> representa os jogadores na partida e seus resultados.</p>
+    <ul>
+      <li>match_player_id</li>
+      <li>time</li>
+      <li>resultado</li>
+      <li>mmr_before</li>
+      <li>mmr_after</li>
+      <li>desempenho</li>
+    </ul>
+
+
+    <!-- RELACIONAMENTOS -->
+    <h3>📌 RELACIONAMENTOS (com cardinalidades mín. e máx.)</h3>
+
+    <p><em>Formato: EntidadeA (minA..maxA) — Relacionamento — (minB..maxB) EntidadeB</em></p>
+
+    <ul>
+      <li><strong>R01 — Player possui MMR por modo</strong><br>
+        PLAYER (1..1) — possui — (0..N) PLAYER_MMR</li>
+
+      <li><strong>R02 — Player entra na fila (Ticket)</strong><br>
+        PLAYER (1..1) — gera — (0..N) QUEUE_TICKET</li>
+
+      <li><strong>R03 — Party envia tickets</strong><br>
+        PARTY (0..1) — gera — (0..N) QUEUE_TICKET</li>
+
+      <li><strong>R04 — Party é formada por jogadores</strong><br>
+        PARTY (1..N) — possui — (1..1) PARTY_MEMBERS — (1..1) PLAYER</li>
+
+      <li><strong>R05 — Modo define vários MMRs</strong><br>
+        MODE_CONFIG (1..1) — configura — (0..N) PLAYER_MMR</li>
+
+      <li><strong>R06 — Modo define tickets</strong><br>
+        MODE_CONFIG (1..1) — classifica — (0..N) QUEUE_TICKET</li>
+
+      <li><strong>R07 — Modo gera partidas</strong><br>
+        MODE_CONFIG (1..1) — gera — (0..N) MATCH</li>
+
+      <li><strong>R08 — Match é hospedada em Server</strong><br>
+        SERVER (1..1) — hospeda — (0..N) MATCH</li>
+
+      <li><strong>R09 — Match contém jogadores</strong><br>
+        MATCH (1..1) — inclui — (1..N) MATCH_PLAYERS — representa — (1..1) PLAYER</li>
+    </ul>
+
+
+    <!-- RESUMO TABELA -->
+    <h3>🔥 RESUMO FINAL (Tabela)</h3>
+
+    <ul>
+      <li>R01 — Player ↔ Player_MMR — 1..1 → 0..N</li>
+      <li>R02 — Player ↔ Queue_Ticket — 1..1 → 0..N</li>
+      <li>R03 — Party ↔ Queue_Ticket — 0..1 → 0..N</li>
+      <li>R04 — Party ↔ Player (via Party_Members) — Party 1..N ↔ Player 1..1</li>
+      <li>R05 — Mode ↔ Player_MMR — 1..1 → 0..N</li>
+      <li>R06 — Mode ↔ Queue_Ticket — 1..1 → 0..N</li>
+      <li>R07 — Mode ↔ Match — 1..1 → 0..N</li>
+      <li>R08 — Server ↔ Match — 1..1 → 0..N</li>
+      <li>R09 — Match ↔ Player (via Match_Players) — Match 1..N ↔ Player 1..N</li>
+    </ul>
+
+    <p><strong>Essas entidades cobrem o estado do jogador, fila, formação da partida, modos, servidores e resultados finais.</strong></p>
+
+    <p>[IMAGEM: DER conceitual aqui]</p>
+    <img class="placeholder" src="assets/der.png" alt="DER conceitual">
+
+  </article>
+</section>
+
 
   <!-- Card: Mockups anotados -->
   <section class="section">
