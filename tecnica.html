@@ -32,7 +32,7 @@
   <!-- Card: Arquitetura -->
   <section class="section">
     <article class="card">
-      <h2>6.1 — Arquitetura técnica (visão geral)</h2>
+      <h2>Arquitetura técnica (visão geral)</h2>
       <p>Pense no sistema de matchmaking como uma linha de montagem com várias etapas — cada uma com uma função bem definida. Aqui estão os blocos principais, explicados de forma simples:</p>
       <ul>
         <li><strong>Cliente (jogador)</strong> — quando o jogador clica em “Jogar”, o app envia um ticket com informações básicas: PlayerID, modo, ping, party_id e snapshot do MMR/trophies.</li>
@@ -44,12 +44,12 @@
         <li><strong>Orquestrador</strong> — cria a partida no servidor, avisa os jogadores e, no fim, atualiza dados (MMR, logs).</li>
       </ul>
       <p>Resumo visual: abaixo há um espaço para você colocar o fluxograma completo que descreve os 12 passos do processo.</p>
-      <p>[IMAGEM: Fluxograma do Matchmaking]</p>
+    
       <img class="placeholder" src="assets/fluxograma.png" alt="Fluxograma do Matchmaking">
     </article>
   </section>
 
-  <!-- Card: Pipeline -->
+ 
   <section class="section">
     <article class="card">
       <h2>Regras que guiam o fluxograma</h2>
@@ -62,7 +62,7 @@
         <li><strong>5.</strong>  O sistema sempre tenta usar o servidor com menor ping médio.</li>
       </ul>
 
-      <h3> Situaçoes especiais do processo:</h3>
+      <h3> Situações especiais do processo:</h3>
        <ul>
         <li><strong>Fila longa:</strong> o sistema continua expandindo a janela até encontrar jogadores.</li>
         <li><strong>Party desbalanceada:</strong> apply regras de compensação no MQS.</li>
@@ -77,7 +77,7 @@
  <!-- Card: 6.3 — Estabilidade da conexão e regras de entrada -->
 <section class="section">
   <article class="card">
-    <h2>6.3 — Estabilidade da conexão e regras de entrada</h2>
+    <h2>Estabilidade da conexão e regras de entrada</h2>
     <p>Antes de confirmar uma partida, o sistema checa a qualidade da conexão dos jogadores para reduzir quedas, lag e partidas inseguras.</p>
 
     <ol>
@@ -103,7 +103,7 @@
   <!-- Card: MQS & Janelas -->
   <section class="section">
     <article class="card">
-      <h2>6.4 — Match Quality Score (MQS) e Janelas de MMR</h2>
+      <h2>Match Quality Score (MQS) e Janelas de MMR</h2>
       <p>O MQS é um número que indica “quão boa” é essa partida potencial. Ele mistura fatores como diferença de habilidade, latência média, tamanho de parties, risco de smurf, e tempo de fila (bônus para quem espera muito).</p>
       <p>Fórmula didática (exemplo):</p>
        <img class="placeholder" src="assets/formula.png" alt="formula">
@@ -121,8 +121,8 @@
   <!-- Card: Matemática & Smurfs -->
   <section class="section">
     <article class="card">
-      <h2>7 — Matemática do Matchmaking & Detecção de Smurfs (resumo)</h2>
-      <h3>7.1 — Conceitos essenciais</h3>
+      <h2>Matemática do Matchmaking & Detecção de Smurfs (resumo)</h2>
+      <h3>Conceitos essenciais</h3>
       <p>Elo/MMR: números que representam habilidade estimada.</p>
       <p>Incerteza (sigma): contas novas têm alta incerteza, sistemas como Glicko usam sigma para ajustar a confiança.</p>
       <p>Probabilidade de vitória: dada a diferença de MMR, estimamos chance de vencer — isso alimenta alterações de MMR.</p>
@@ -140,7 +140,7 @@
   <!-- Card: Problemas e mitigação -->
   <section class="section">
     <article class="card">
-      <h2>8 — Problemas do Matchmaking e abordagens</h2>
+      <h2>Problemas do Matchmaking e abordagens</h2>
       <ul>
         <li><strong>Smurfs</strong> — detectar com smurfRisk e colocar em pool especial.</li>
         <li><strong>Boosting</strong> — detectar padrões e auditar manualmente.</li>
@@ -155,9 +155,9 @@
 <section class="section">
   <article class="card">
 
-    <h2>14 — MODELO DE DADOS (DER Conceitual)</h2>
+    <h2>MODELO DE DADOS (DER Conceitual)</h2>
 
-    <p>A seguir está o modelo conceitual REAL do sistema de matchmaking, composto por 9 entidades, seus atributos conceituais, descrições e os relacionamentos com cardinalidades mín./máx.</p>
+    <p>A seguir está o modelo conceitual real do sistema de matchmaking, composto por 9 entidades, seus atributos conceituais, descrições e os relacionamentos com cardinalidades mín./máx.</p>
 
 
     <!-- ENTIDADES -->
@@ -309,7 +309,7 @@
 
     <p><strong>Essas entidades cobrem o estado do jogador, fila, formação da partida, modos, servidores e resultados finais.</strong></p>
 
-    <p>[IMAGEM: DER conceitual aqui]</p>
+    <p> Aqui esta a tabela em forma conceitual:</p>
     <img class="placeholder" src="assets/der.png" alt="DER conceitual">
 
   </article>
@@ -323,18 +323,18 @@
       <p>As telas que você deve produzir com base nesses dados:</p>
 
       <h3>Tela 1 — Lobby / Fila</h3>
-      <p>Conteúdo a mostrar: Player.nickname, Queue_Ticket.role_escolhida, leitura de ping, Queue_Ticket.tempo_entrada, Player_MMR.mmr_atual, botões Cancelar/Ver Regras, tempo estimado e janela atual (±25 MMR).</p>
-      <p>[IMAGEM: Mockup — Lobby/ Fila aqui]</p>
+      
+      <p></p>
       <img class="placeholder" src="assets/mockup_lobby.png" alt="Mockup Lobby">
 
       <h3>Tela 2 — Pré-partida</h3>
-      <p>Conteúdo a mostrar: Lista de jogadores (Match_Players + Player), Time A/B, Roles, Qualidade da partida (Match.match_quality_score), servidor e botões aceitar/recusar.</p>
-      <p>[IMAGEM: Mockup — Pré-partida aqui]</p>
+      
+      <p></p>
       <img class="placeholder" src="assets/mockup_pre.png" alt="Mockup Pré-partida">
 
       <h3>Tela 3 — Pós-partida</h3>
-      <p>Conteúdo a mostrar: Resultado (Match_Players.resultado), MMR ganho/perdido, estatísticas (Match_Players.desempenho), botão Reportar e Ver Replay.</p>
-      <p>[IMAGEM: Mockup — Pós-partida aqui]</p>
+      
+      <p></p>
       <img class="placeholder" src="assets/mockup_post.png" alt="Mockup Pós-partida">
     </article>
   </section>

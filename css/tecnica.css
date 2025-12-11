@@ -221,11 +221,19 @@ html, body{
     padding:18px;
   }
 
+  /* Header responsivo */
   .nav-wrapper{
     padding:12px 14px;
+    flex-wrap: wrap; /* Impede que o header estoure a largura */
   }
 
-  /* logo resp */
+  .nav-links{
+    flex-wrap: wrap;
+    gap:6px;
+    justify-content:flex-start;
+  }
+
+  /* Logo responsiva */
   .logo-img{
     width:30px;
     height:30px;
@@ -235,6 +243,7 @@ html, body{
     font-size:16px;
   }
 
+  /* Cards responsivos */
   .card{
     padding:20px;
   }

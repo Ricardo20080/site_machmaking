@@ -202,6 +202,19 @@ html, body{
     padding:18px;
   }
 
+  /* --- header responsivo sem overflow --- */
+  .nav-wrapper{
+    padding:12px 14px;
+    flex-wrap: wrap;      /* permite quebrar */
+    gap:8px;
+  }
+
+  .nav-links{
+    flex-wrap: wrap;      /* links descem */
+    gap:6px;
+    justify-content:flex-start;
+  }
+
   /* reduzir logo */
   .logo-img{
     width:32px;
@@ -213,10 +226,6 @@ html, body{
   }
 
   /* diminuir espaçamento do menu */
-  .nav-links{
-    gap:6px;
-  }
-
   .nav-link{
     padding:6px 10px;
     font-size:14px;
